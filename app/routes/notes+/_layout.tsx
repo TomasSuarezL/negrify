@@ -23,6 +23,7 @@ export default function NotesPage() {
           <Link to=".">Notes</Link>
         </h1>
         <p>{user.email}</p>
+        <Link to="/">home</Link>
         <Form action="/logout" method="post">
           <button
             type="submit"
