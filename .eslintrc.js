@@ -27,12 +27,13 @@ module.exports = {
     // React
     {
       files: ["**/*.{js,jsx,ts,tsx}"],
-      plugins: ["react", "jsx-a11y"],
+      plugins: ["react", "jsx-a11y", "@react-three"],
       extends: [
         "plugin:react/recommended",
         "plugin:react/jsx-runtime",
         "plugin:react-hooks/recommended",
         "plugin:jsx-a11y/recommended",
+        "plugin:@react-three/recommended",
         "prettier",
       ],
       settings: {
@@ -49,6 +50,19 @@ module.exports = {
         "react/jsx-no-leaked-render": [
           "warn",
           { validStrategies: ["ternary"] },
+        ],
+        "react/no-unknown-property": [
+          "error",
+          {
+            ignore: [
+              "args",
+              "position",
+              "position-x",
+              "position-y",
+              "intensity",
+              "rotation-x",
+            ],
+          },
         ],
       },
     },
