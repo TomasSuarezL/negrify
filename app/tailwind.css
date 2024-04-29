@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 125 950;
+  font-stretch: 75% 125%;
+  src: url('../public/fonts/Manrope-VariableFont_wght.ttf') format('truetype');
+}
+
+@layer base {
+  html {
+    font-family: "Manrope", system-ui, sans-serif;
+  }
+}

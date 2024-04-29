@@ -10,7 +10,7 @@ export default function Index() {
   return (
     <main className="relative min-h-screen bg-white flex-col sm:flex sm:justify-center sm:items-center">
       <div className="absolute top-9">
-        <h1 className="font-black text-7xl mix-blend-difference text-white after:pl-4 after:block after:w-12 after:absolute after:bg-black after:mix-blend-difference after:content-['']">
+        <h1 className="font-['Manrope'] font-black text-7xl mix-blend-difference text-white after:pl-4 after:block after:w-12 after:absolute after:bg-black after:mix-blend-difference after:content-['']">
           Negrify
         </h1>
       </div>
@@ -26,7 +26,7 @@ export default function Index() {
         <div className="flex-1 flex flex-col items-center justify-center">
           <Link
             to="/login"
-            className="border-4 border-black p-5 text-3xl font-white transition-colors duration-500 hover:text-white hover:border-white hover:bg-black"
+            className="border-4 border-black p-5 text-3xl font-black transition-colors duration-500 hover:text-white hover:border-white hover:bg-black"
           >
             Ingresar
           </Link>
