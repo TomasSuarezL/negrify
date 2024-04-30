@@ -8,9 +8,10 @@ import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { safeRedirect, validateEmail } from "~/lib/routingUtils";
 import { verifyLogin } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/session.server";
-import { safeRedirect, validateEmail } from "~/utils";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await getUserId(request);
@@ -82,22 +83,23 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-full flex-col justify-center">
-      <div className="mx-auto w-full max-w-md px-8">
+      <div className="mx-auto max-w-md p-8 border bg-zinc-950 w-full">
+        <h1 className="text-6xl font-bold text-white mx-auto w-fit pb-10">
+          Negrify
+        </h1>
         <Form method="post" className="space-y-6">
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-50"
             >
               Email address
             </label>
             <div className="mt-1">
-              <input
+              <Input
                 ref={emailRef}
                 id="email"
                 required
-                // eslint-disable-next-line jsx-a11y/no-autofocus
-                autoFocus={true}
                 name="email"
                 type="email"
                 autoComplete="email"
@@ -116,12 +118,12 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-50"
             >
               Password
             </label>
-            <div className="mt-1">
-              <input
+            <div className="mt-1 mb-6">
+              <Input
                 id="password"
                 ref={passwordRef}
                 name="password"
@@ -140,7 +142,7 @@ export default function LoginPage() {
           </div>
 
           <input type="hidden" name="redirectTo" value={redirectTo} />
-          <Button type="submit" className="w-full ">
+          <Button type="submit" className="w-full" variant={"outline"}>
             Log in
           </Button>
           <div className="flex items-center justify-between">
@@ -153,12 +155,12 @@ export default function LoginPage() {
               />
               <label
                 htmlFor="remember"
-                className="ml-2 block text-sm text-gray-900"
+                className="ml-2 block text-sm text-gray-100"
               >
                 Remember me
               </label>
             </div>
-            <div className="text-center text-sm text-gray-500">
+            <div className="text-center text-sm text-gray-100">
               Don&apos;t have an account?{" "}
               <Link
                 className="text-blue-500 underline"
