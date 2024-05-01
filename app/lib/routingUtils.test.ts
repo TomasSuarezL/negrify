@@ -1,4 +1,4 @@
-import { validateEmail } from "./lib/routingUtils";
+import { validateEmail } from "./routingUtils";
 
 test("validateEmail returns false for non-emails", () => {
   expect(validateEmail(undefined)).toBe(false);

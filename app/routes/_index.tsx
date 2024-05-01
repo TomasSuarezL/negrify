@@ -1,12 +1,17 @@
-import type { MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import { json, Link, redirect } from "@remix-run/react";
 
-// import { useOptionalUser } from "~/utils";
+import { getUserId } from "~/session.server";
 
 export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const userId = await getUserId(request);
+  if (userId) return redirect("/perfil");
+  return json({});
+};
+
 export default function Index() {
-  // const user = useOptionalUser();
   return (
     <main className="relative min-h-screen bg-white flex-col sm:flex sm:justify-center sm:items-center">
       <div className="absolute top-9">

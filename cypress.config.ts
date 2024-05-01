@@ -1,4 +1,5 @@
 import { defineConfig } from "cypress";
+import path from "path";
 
 export default defineConfig({
   e2e: {
@@ -21,6 +22,14 @@ export default defineConfig({
       });
 
       return { ...config, ...configOverrides };
+    },
+  },
+
+  component: {
+    devServer: {
+      framework: "react",
+      bundler: "vite",
+      viteConfig: { path: "./vitest.config.ts" },
     },
   },
 });

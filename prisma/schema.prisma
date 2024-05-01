@@ -32,7 +32,7 @@ model DJ {
   userId String @unique
 
   nombre              String
-  genero              Genero[]
+  generos             Genero[]
   ubicacion           Ubicacion   @relation(fields: [ubicacionId], references: [id])
   ubicacionId         String
   reviews             Review[]
@@ -55,12 +55,12 @@ model Cliente {
   ubicacionId String
   avatar      String
   favoritos   DJ[]
-  Review      Review[]
+  reviews     Review[]
 }
 
 model Genero {
   id          Int    @id @default(autoincrement())
-  descripcion String
+  descripcion String @unique
   djs         DJ[]
 }
 
@@ -72,7 +72,7 @@ model Ubicacion {
   latitud   String?
   longitud  String?
   djs       DJ[]
-  Cliente   Cliente[]
+  cliente   Cliente[]
 }
 
 model Review {
