@@ -28,7 +28,7 @@ describe("smoke tests", () => {
     cy.findByRole("link", { name: /Ingresar/i });
   });
 
-  it("should allow you to make a note", () => {
+  it("should allow you to create a perfil", () => {
     const testNote = {
       title: faker.lorem.words(1),
       body: faker.lorem.sentences(1),
@@ -37,8 +37,7 @@ describe("smoke tests", () => {
 
     cy.visitAndCheck("/");
 
-    cy.findByRole("link", { name: /notes/i }).click();
-    cy.findByText("No notes yet");
+    cy.findByRole("link", { name: /Crear perfil/i });
 
     cy.findByRole("link", { name: /\+ new note/i }).click();
 

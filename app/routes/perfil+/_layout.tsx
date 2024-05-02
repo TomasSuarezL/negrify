@@ -2,7 +2,6 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, Outlet } from "@remix-run/react";
 
-import { useUser } from "~/lib/routingUtils";
 import { requireUserId } from "~/session.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -11,15 +10,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function NotesPage() {
-  const user = useUser();
-
   return (
     <div className="flex h-full min-h-screen flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
         <h1 className="text-3xl font-bold">
-          <Link to=".">Perfil</Link>
+          <Link to=".">Negrify</Link>
         </h1>
-        <p>{user.email}</p>
         <Form action="/logout" method="post">
           <button
             type="submit"

@@ -5,16 +5,14 @@ import { useUser } from "~/lib/routingUtils";
 export default function NoteIndexPage() {
   const user = useUser();
 
-  console.log(user);
-
-  if (!user.dj || !user.Cliente) {
+  if (!user.dj && !user.Cliente) {
     return (
-      <p>
-        Aun no tiene un perfil
+      <>
+        <h5>Aun no tiene un perfil</h5>
         <Link to="new" className="text-blue-500 underline">
           Crear perfil.
         </Link>
-      </p>
+      </>
     );
   }
 
