@@ -86,9 +86,10 @@ export default function NewPerfilPage() {
           <Label htmlFor="dj-mode">Sos DJ?</Label>
         </div>
         <div className="grid w-full  items-center gap-1.5">
-          <Label htmlFor="title">Nombre</Label>
+          <Label htmlFor="nombre">Nombre</Label>
           <Input
             type="text"
+            role="textbox"
             id="nombre"
             name="nombre"
             placeholder="Nombre"
@@ -107,7 +108,7 @@ export default function NewPerfilPage() {
           )}
         </div>
         <div className="grid w-full  items-center gap-1.5">
-          <Label htmlFor="title">Apellido</Label>
+          <Label htmlFor="apellido">Apellido</Label>
           <Input
             type="text"
             id="apellido"
@@ -129,7 +130,7 @@ export default function NewPerfilPage() {
         </div>
         <div className="flex flex-row w-full items-center space-x-2">
           <div className="flex-1 grid items-center gap-1.5">
-            <Label htmlFor="title">Pais</Label>
+            <Label htmlFor="pais">Pais</Label>
             <Input
               type="text"
               id="pais"
@@ -150,7 +151,7 @@ export default function NewPerfilPage() {
             )}
           </div>
           <div className="flex-1 grid items-center gap-1.5">
-            <Label htmlFor="title">Ciudad</Label>
+            <Label htmlFor="ciudad">Ciudad</Label>
             <Input
               type="text"
               id="ciudad"
@@ -171,7 +172,7 @@ export default function NewPerfilPage() {
             )}
           </div>
           <div className="flex-1 grid items-center gap-1.5">
-            <Label htmlFor="title">Direccion</Label>
+            <Label htmlFor="direccion">Direccion</Label>
             <Input
               type="text"
               id="direccion"
@@ -193,7 +194,7 @@ export default function NewPerfilPage() {
           </div>
         </div>
         <div className="grid w-full  items-center gap-1.5">
-          <Label htmlFor="title">Avatar</Label>
+          <Label htmlFor="avatar">Avatar</Label>
           <Input
             type="text"
             id="avatar"

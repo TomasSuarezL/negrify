@@ -97,13 +97,13 @@ export default function Join() {
             </label>
             <div className="mt-1">
               <input
+                type="email"
                 ref={emailRef}
                 id="email"
                 required
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus={true}
                 name="email"
-                type="email"
                 autoComplete="email"
                 aria-invalid={actionData?.errors?.email ? true : undefined}
                 aria-describedby="email-error"

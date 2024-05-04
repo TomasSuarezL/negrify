@@ -11,7 +11,7 @@ export function createCliente({
 }: Omit<Cliente, "id"> & {
   userId: User["id"];
 }) {
-  return prisma.Cliente.create({
+  return prisma.cliente.create({
     data: {
       nombre,
       apellido,
@@ -37,7 +37,7 @@ export function createUbicacion({
   longitud,
   latitud
 }: Omit<Ubicacion, "id">) {
-  return prisma.Ubicacion.create({
+  return prisma.ubicacion.create({
     data: {
       ciudad,
       pais,

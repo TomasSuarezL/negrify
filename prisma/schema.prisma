@@ -33,8 +33,8 @@ model DJ {
 
   nombre              String
   generos             Genero[]
-  ubicacion           Ubicacion   @relation(fields: [ubicacionId], references: [id])
-  ubicacionId         String
+  ubicacion           Ubicacion   @relation(fields: [ubicacionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ubicacionId         String      @unique
   reviews             Review[]
   avatar              String
   background          String
@@ -51,8 +51,8 @@ model Cliente {
 
   nombre      String
   apellido    String
-  ubicacion   Ubicacion @relation(fields: [ubicacionId], references: [id])
-  ubicacionId String
+  ubicacion   Ubicacion @relation(fields: [ubicacionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ubicacionId String    @unique
   avatar      String
   favoritos   DJ[]
   reviews     Review[]
@@ -65,36 +65,36 @@ model Genero {
 }
 
 model Ubicacion {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   pais      String
   ciudad    String
   direccion String
   latitud   String?
   longitud  String?
-  djs       DJ[]
-  cliente   Cliente[]
+  djs       DJ?
+  cliente   Cliente?
 }
 
 model Review {
   id        Int     @id @default(autoincrement())
   rate      Int
   contenido String
-  dj        DJ      @relation(fields: [dJId], references: [id])
-  dJId      String
-  cliente   Cliente @relation(fields: [clienteId], references: [id])
+  dj        DJ      @relation(fields: [djId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  djId      String
+  cliente   Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   clienteId String
 }
 
 model Artista {
   id     Int     @id @default(autoincrement())
   nombre String
-  DJ     DJ?     @relation(fields: [dJId], references: [id])
-  dJId   String?
+  dj     DJ?     @relation(fields: [djId], references: [id])
+  djId   String?
 }
 
 model RedSocial {
   id     Int     @id @default(autoincrement())
   nombre String
-  DJ     DJ?     @relation(fields: [dJId], references: [id])
-  dJId   String?
+  dj     DJ?     @relation(fields: [djId], references: [id])
+  djId   String?
 }
