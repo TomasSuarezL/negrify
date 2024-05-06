@@ -6,7 +6,6 @@ export function createCliente({
   nombre,
   apellido,
   avatar,
-  ubicacionId,
   userId,
 }: Omit<Cliente, "id"> & {
   userId: User["id"];
@@ -16,11 +15,6 @@ export function createCliente({
       nombre,
       apellido,
       avatar,
-      ubicacion: {
-        connect: {
-          id: ubicacionId,
-        },
-      },
       user: {
         connect: {
           id: userId,
@@ -35,7 +29,8 @@ export function createUbicacion({
   pais,
   direccion,
   longitud,
-  latitud
+  latitud,
+  clienteId
 }: Omit<Ubicacion, "id">) {
   return prisma.ubicacion.create({
     data: {
@@ -43,7 +38,12 @@ export function createUbicacion({
       pais,
       direccion,
       longitud,
-      latitud
+      latitud,
+      cliente: {
+        connect: {
+          id: clienteId,
+        },
+      },
     },
   });
 }

@@ -49,13 +49,12 @@ model Cliente {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique
 
-  nombre      String
-  apellido    String
-  ubicacion   Ubicacion @relation(fields: [ubicacionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  ubicacionId String    @unique
-  avatar      String
-  favoritos   DJ[]
-  reviews     Review[]
+  nombre    String
+  apellido  String
+  avatar    String
+  favoritos DJ[]
+  reviews   Review[]
+  ubicacion Ubicacion?
 }
 
 model Genero {
@@ -72,7 +71,8 @@ model Ubicacion {
   latitud   String?
   longitud  String?
   djs       DJ?
-  cliente   Cliente?
+  cliente   Cliente? @relation(fields: [clienteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  clienteId String   @unique
 }
 
 model Review {
@@ -95,6 +95,7 @@ model Artista {
 model RedSocial {
   id     Int     @id @default(autoincrement())
   nombre String
+  url    String
   dj     DJ?     @relation(fields: [djId], references: [id])
   djId   String?
 }

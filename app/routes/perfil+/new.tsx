@@ -1,7 +1,7 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z, ZodError } from "zod";
 
 import { Input } from "~/components/ui/input";
@@ -15,6 +15,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const formPayload = Object.fromEntries(await request.formData());
 
+  console.log(!!formPayload["dj-mode"]);
+
   const perfilSchema = z.object({
     nombre: z.string().min(2),
     apellido: z.string().min(2),
@@ -27,19 +29,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const { nombre, apellido, pais, ciudad, direccion, avatar } =
       perfilSchema.parse(formPayload);
-    const ubicacion = await createUbicacion({
+
+    // ToDo: Move to atomic transaction;
+    const cliente = await createCliente({
+      nombre,
+      userId,
+      apellido,
+      avatar,
+    });
+    await createUbicacion({
       pais,
       ciudad,
       direccion,
       longitud: null,
       latitud: null,
-    });
-    await createCliente({
-      nombre,
-      userId,
-      apellido,
-      ubicacionId: ubicacion.id,
-      avatar,
+      clienteId: cliente.id,
     });
     return redirect("/perfil");
   } catch (error) {
@@ -67,6 +71,9 @@ export default function NewPerfilPage() {
   const ciudadRef = useRef<HTMLInputElement>(null);
   const direccionRef = useRef<HTMLInputElement>(null);
   const avatarRef = useRef<HTMLInputElement>(null);
+  const descripcionRef = useRef<HTMLInputElement>(null);
+
+  const [isDJ, setIsDJ] = useState(false);
 
   useEffect(() => {
     console.log(actionData?.errors?.nombre);
@@ -82,7 +89,12 @@ export default function NewPerfilPage() {
       <h3 className="text-5xl pb-8">Crear Nuevo Perfil</h3>
       <Form method="post" className="flex flex-col gap-1 w-5/6 p-8 border">
         <div className="flex items-center space-x-2 pb-8">
-          <Switch id="dj-mode" />
+          <Switch
+            id="dj-mode"
+            name="dj-mode"
+            checked={isDJ}
+            onCheckedChange={() => setIsDJ(!isDJ)}
+          />
           <Label htmlFor="dj-mode">Sos DJ?</Label>
         </div>
         <div className="grid w-full  items-center gap-1.5">
@@ -214,7 +226,35 @@ export default function NewPerfilPage() {
             <div className="pt-1 h-8"></div>
           )}
         </div>
-
+        {isDJ && (
+          <>
+            <div className="grid w-full  items-center gap-1.5">
+              <Label htmlFor="descripcion">Descripcion</Label>
+              <Input
+                type="text"
+                id="descripcion"
+                name="descripcion"
+                placeholder="Descripcion"
+                ref={descripcionRef}
+                aria-invalid={
+                  actionData?.errors?.descripcion ? true : undefined
+                }
+                aria-errormessage={
+                  actionData?.errors?.descripcion
+                    ? "descripcion-error"
+                    : undefined
+                }
+              />
+              {actionData?.errors?.avatar ? (
+                <div className="pt-1 h-8 text-red-700" id="avatar-error">
+                  {actionData.errors.avatar}
+                </div>
+              ) : (
+                <div className="pt-1 h-8"></div>
+              )}
+            </div>
+          </>
+        )}
         <div className="text-right">
           <button
             type="submit"
