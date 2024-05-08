@@ -3,6 +3,7 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
 import { z, ZodError } from "zod";
+import { Button } from "~/components/ui/button";
 
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -72,8 +73,18 @@ export default function NewPerfilPage() {
   const direccionRef = useRef<HTMLInputElement>(null);
   const avatarRef = useRef<HTMLInputElement>(null);
   const descripcionRef = useRef<HTMLInputElement>(null);
+  const generosRef = useRef<HTMLInputElement>(null);
 
   const [isDJ, setIsDJ] = useState(false);
+  const [generos, setGeneros] = useState<string[]>([]);
+
+  const handleAddGenero = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (generosRef?.current?.value) {
+      setGeneros([...generos, generosRef.current.value]);
+    }
+  };
 
   useEffect(() => {
     console.log(actionData?.errors?.nombre);
@@ -255,6 +266,20 @@ export default function NewPerfilPage() {
             </div>
           </>
         )}
+        <div className="flex w-full max-w-sm items-center space-x-2">
+          <Input type="text" placeholder="Generos" ref={generosRef} />
+          <Button type="submit" onClick={handleAddGenero}>
+            Agregar
+          </Button>
+        </div>
+        <div>
+          {generos.map((genero) => (
+            <div key={genero}>
+              <div>{genero}</div>
+              <input type="hidden" name="generos[]" value={genero} />
+            </div>
+          ))}
+        </div>
         <div className="text-right">
           <button
             type="submit"

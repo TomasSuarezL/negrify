@@ -5,7 +5,7 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev -c \"npm run dev:serve\"",
-    "dev:debug":"cross-env NODE_OPTIONS=\"--inspect-brk\" npm run dev",
+    "dev:debug": "cross-env NODE_OPTIONS=\"--inspect-brk\" npm run dev",
     "dev:serve": "binode --require ./mocks -- @remix-run/serve:remix-serve ./build/index.js",
     "format": "prettier --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
