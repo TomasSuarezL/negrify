@@ -14,9 +14,10 @@ import { requireUserId } from "~/session.server";
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
 
-  const formPayload = Object.fromEntries(await request.formData());
+  const formData = await request.formData();
+  const formPayload = Object.fromEntries(formData);
 
-  console.log(!!formPayload["dj-mode"]);
+  const generos = formData.getAll("generos");
 
   const perfilSchema = z.object({
     nombre: z.string().min(2),
@@ -84,6 +85,15 @@ export default function NewPerfilPage() {
     if (generosRef?.current?.value) {
       setGeneros([...generos, generosRef.current.value]);
     }
+  };
+
+  const handleRemoveGenero = (
+    e: React.FormEvent<HTMLButtonElement>,
+    genero: string,
+  ) => {
+    e.preventDefault();
+
+    setGeneros(generos.filter((g) => g !== genero));
   };
 
   useEffect(() => {
@@ -266,17 +276,31 @@ export default function NewPerfilPage() {
             </div>
           </>
         )}
-        <div className="flex w-full max-w-sm items-center space-x-2">
-          <Input type="text" placeholder="Generos" ref={generosRef} />
+        <Label htmlFor="generos">Generos</Label>
+        <div className="flex w-full max-w-sm items-center space-x-2 mb-3">
+          <Input
+            type="text"
+            placeholder="Generos"
+            name="generoInput"
+            ref={generosRef}
+          />
           <Button type="submit" onClick={handleAddGenero}>
             Agregar
           </Button>
         </div>
-        <div>
+        <div className="flex w-full flex-row space-x-2">
           {generos.map((genero) => (
             <div key={genero}>
-              <div>{genero}</div>
-              <input type="hidden" name="generos[]" value={genero} />
+              <div className="flex flex-row space-x-3 items-center bg-zinc-950 px-4 py-1 rounded-full text-zinc-100">
+                <p>{genero}</p>
+                <button
+                  className="mb-1"
+                  onClick={(e) => handleRemoveGenero(e, genero)}
+                >
+                  x
+                </button>
+              </div>
+              <input type="hidden" name={`generos`} value={genero} />
             </div>
           ))}
         </div>
