@@ -4,10 +4,11 @@ import { Input } from "./input";
 
 interface MultiInputProps {
   name: string;
+  error?: string;
   placeholder?: string;
 }
 
-export const MultiInput = ({ name, placeholder }: MultiInputProps) => {
+export const MultiInput = ({ name, placeholder, error }: MultiInputProps) => {
   const elementsRef = useRef<HTMLInputElement>(null);
 
   const [elements, setElements] = useState<string[]>([]);
@@ -58,6 +59,13 @@ export const MultiInput = ({ name, placeholder }: MultiInputProps) => {
           </div>
         ))}
       </div>
+      {error ? (
+        <div className="pt-1 h-8 text-red-700" id="avatar-error">
+          {error}
+        </div>
+      ) : (
+        <div className="pt-1 h-8"></div>
+      )}
     </>
   );
 };

@@ -3,6 +3,7 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
 import { z, ZodError } from "zod";
+import { Button } from "~/components/ui/button";
 
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -258,14 +259,19 @@ export default function NewPerfilPage() {
           </>
         )}
         <Label htmlFor="generos">Generos</Label>
-        <MultiInput name="generos" placeholder="Generos" />
+        <MultiInput
+          name="generos"
+          placeholder="Generos"
+          error={actionData?.errors.generos}
+        />
+        <Label htmlFor="referencias">Referencias</Label>
+        <MultiInput
+          name="referencias"
+          placeholder="Artistas referencias"
+          error={actionData?.errors.referencias}
+        />
         <div className="text-right">
-          <button
-            type="submit"
-            className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-          >
-            Save
-          </button>
+          <Button type="submit">Save</Button>
         </div>
       </Form>
     </div>
