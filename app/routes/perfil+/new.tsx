@@ -3,10 +3,10 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
 import { z, ZodError } from "zod";
-import { Button } from "~/components/ui/button";
 
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { MultiInput } from "~/components/ui/multiInput";
 import { Switch } from "~/components/ui/switch";
 import { createCliente, createUbicacion } from "~/models/cliente.server";
 import { requireUserId } from "~/session.server";
@@ -74,27 +74,8 @@ export default function NewPerfilPage() {
   const direccionRef = useRef<HTMLInputElement>(null);
   const avatarRef = useRef<HTMLInputElement>(null);
   const descripcionRef = useRef<HTMLInputElement>(null);
-  const generosRef = useRef<HTMLInputElement>(null);
 
   const [isDJ, setIsDJ] = useState(false);
-  const [generos, setGeneros] = useState<string[]>([]);
-
-  const handleAddGenero = (e: React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    if (generosRef?.current?.value) {
-      setGeneros([...generos, generosRef.current.value]);
-    }
-  };
-
-  const handleRemoveGenero = (
-    e: React.FormEvent<HTMLButtonElement>,
-    genero: string,
-  ) => {
-    e.preventDefault();
-
-    setGeneros(generos.filter((g) => g !== genero));
-  };
 
   useEffect(() => {
     console.log(actionData?.errors?.nombre);
@@ -277,33 +258,7 @@ export default function NewPerfilPage() {
           </>
         )}
         <Label htmlFor="generos">Generos</Label>
-        <div className="flex w-full max-w-sm items-center space-x-2 mb-3">
-          <Input
-            type="text"
-            placeholder="Generos"
-            name="generoInput"
-            ref={generosRef}
-          />
-          <Button type="submit" onClick={handleAddGenero}>
-            Agregar
-          </Button>
-        </div>
-        <div className="flex w-full flex-row space-x-2">
-          {generos.map((genero) => (
-            <div key={genero}>
-              <div className="flex flex-row space-x-3 items-center bg-zinc-950 px-4 py-1 rounded-full text-zinc-100">
-                <p>{genero}</p>
-                <button
-                  className="mb-1"
-                  onClick={(e) => handleRemoveGenero(e, genero)}
-                >
-                  x
-                </button>
-              </div>
-              <input type="hidden" name={`generos`} value={genero} />
-            </div>
-          ))}
-        </div>
+        <MultiInput name="generos" placeholder="Generos" />
         <div className="text-right">
           <button
             type="submit"
