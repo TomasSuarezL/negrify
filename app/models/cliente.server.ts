@@ -1,4 +1,4 @@
-import type { User, Ubicacion, Cliente } from "@prisma/client";
+import type { User, Cliente } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -24,26 +24,3 @@ export function createCliente({
   });
 }
 
-export function createUbicacion({
-  ciudad,
-  pais,
-  direccion,
-  longitud,
-  latitud,
-  clienteId
-}: Omit<Ubicacion, "id">) {
-  return prisma.ubicacion.create({
-    data: {
-      ciudad,
-      pais,
-      direccion,
-      longitud,
-      latitud,
-      cliente: {
-        connect: {
-          id: clienteId,
-        },
-      },
-    },
-  });
-}

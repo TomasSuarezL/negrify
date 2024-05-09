@@ -9,7 +9,8 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { MultiInput } from "~/components/ui/multiInput";
 import { Switch } from "~/components/ui/switch";
-import { createCliente, createUbicacion } from "~/models/cliente.server";
+import { createCliente } from "~/models/cliente.server";
+import { createUbicacion } from "~/models/ubicacion.server";
 import { requireUserId } from "~/session.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -30,9 +31,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 
   try {
+    let id = null;
     const { nombre, apellido, pais, ciudad, direccion, avatar } =
       perfilSchema.parse(formPayload);
 
+    // if (!!formPayload["dj-mode"]) {
+    // } else {
     // ToDo: Move to atomic transaction;
     const cliente = await createCliente({
       nombre,
@@ -40,14 +44,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       apellido,
       avatar,
     });
+
+    id = cliente.id;
+    // }
+
     await createUbicacion({
       pais,
       ciudad,
       direccion,
       longitud: null,
       latitud: null,
-      clienteId: cliente.id,
+      clienteId: id,
+      djId: id,
     });
+
     return redirect("/perfil");
   } catch (error) {
     let errorMap: Record<keyof typeof formPayload, string> = {};
@@ -256,20 +266,20 @@ export default function NewPerfilPage() {
                 <div className="pt-1 h-8"></div>
               )}
             </div>
+            <Label htmlFor="generos">Generos</Label>
+            <MultiInput
+              name="generos"
+              placeholder="Generos"
+              error={actionData?.errors.generos}
+            />
+            <Label htmlFor="referencias">Referencias</Label>
+            <MultiInput
+              name="referencias"
+              placeholder="Artistas referencias"
+              error={actionData?.errors.referencias}
+            />
           </>
         )}
-        <Label htmlFor="generos">Generos</Label>
-        <MultiInput
-          name="generos"
-          placeholder="Generos"
-          error={actionData?.errors.generos}
-        />
-        <Label htmlFor="referencias">Referencias</Label>
-        <MultiInput
-          name="referencias"
-          placeholder="Artistas referencias"
-          error={actionData?.errors.referencias}
-        />
         <div className="text-right">
           <Button type="submit">Save</Button>
         </div>
