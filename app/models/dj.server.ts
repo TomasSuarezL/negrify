@@ -12,8 +12,8 @@ export function createDJ({
   userId,
 }: Omit<DJ, "clientesFaveados"> & {
   userId: User["id"];
-  generos: Genero[];
-  artistasReferencias: Artista[]
+  generos: string[];
+  artistasReferencias: Artista[];
 }) {
   return prisma.dJ.create({
     data: {
@@ -22,16 +22,16 @@ export function createDJ({
       background,
       descripcion,
       generos: {
-        connectOrCreate: generos.map(g => ({
-          where: { descripcion: g.descripcion },
-          create: g,
-        }))
+        connectOrCreate: generos.map((g) => ({
+          where: { descripcion: g },
+          create: { descripcion: g },
+        })),
       },
       artistasReferencias: {
-        connectOrCreate: artistasReferencias.map(a => ({
+        connectOrCreate: artistasReferencias.map((a) => ({
           where: { nombre: a.nombre },
           create: a,
-        }))
+        })),
       },
       user: {
         connect: {

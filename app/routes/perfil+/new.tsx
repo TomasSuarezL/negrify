@@ -35,19 +35,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const { nombre, apellido, pais, ciudad, direccion, avatar } =
       perfilSchema.parse(formPayload);
 
-    // if (!!formPayload["dj-mode"]) {
-    // } else {
-    // ToDo: Move to atomic transaction;
-    const cliente = await createCliente({
-      nombre,
-      userId,
-      apellido,
-      avatar,
-    });
+    if (!!formPayload["dj-mode"]) {
+    } else {
+      const cliente = await createCliente({
+        nombre,
+        userId,
+        apellido,
+        avatar,
+      });
 
-    id = cliente.id;
-    // }
+      id = cliente.id;
+    }
 
+    // ToDo: Move to atomic transaction;?
     await createUbicacion({
       pais,
       ciudad,

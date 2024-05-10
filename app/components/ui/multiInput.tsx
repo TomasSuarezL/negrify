@@ -35,11 +35,14 @@ export const MultiInput = ({ name, placeholder, error }: MultiInputProps) => {
       <div className="flex w-full max-w-sm items-center space-x-2 mb-3">
         <Input
           type="text"
+          id={name}
+          name={name}
           placeholder={placeholder}
-          name={`${name}Input`}
           ref={elementsRef}
+          aria-invalid={error ? true : undefined}
+          aria-errormessage={error ? "descripcion-error" : undefined}
         />
-        <Button type="submit" onClick={handleAddElement}>
+        <Button type="button" onClick={handleAddElement}>
           Agregar
         </Button>
       </div>
@@ -55,7 +58,7 @@ export const MultiInput = ({ name, placeholder, error }: MultiInputProps) => {
                 x
               </button>
             </div>
-            <input type="hidden" name={name} value={element} />
+            <input type="hidden" name={`${name}[]`} value={element} />
           </div>
         ))}
       </div>

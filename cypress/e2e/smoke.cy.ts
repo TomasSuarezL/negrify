@@ -1,5 +1,24 @@
 import { faker } from "@faker-js/faker";
 
+const signup = () => {
+  const loginForm = {
+    email: `${faker.internet.userName()}@example.com`,
+    password: faker.internet.password(),
+  };
+
+  cy.then(() => ({ email: loginForm.email })).as("user");
+
+  cy.visitAndCheck("/");
+
+  cy.findByRole("link", { name: /Ingresar/i }).click();
+
+  cy.findByRole("link", { name: /sign up/i }).click();
+
+  cy.findByRole("textbox", { name: /email/i }).type(loginForm.email);
+  cy.findByLabelText(/password/i).type(loginForm.password);
+  cy.findByRole("button", { name: /create account/i }).click();
+};
+
 describe("smoke tests", () => {
   afterEach(() => {
     cy.cleanupUser();
@@ -28,23 +47,36 @@ describe("smoke tests", () => {
   //   cy.findByRole("link", { name: /Ingresar/i });
   // });
 
-  it("should allow you to register and create a cliente perfil", () => {
-    const loginForm = {
-      email: `${faker.internet.userName()}@example.com`,
-      password: faker.internet.password(),
-    };
+  // it("should allow you to register and create a cliente perfil", () => {
+  //   signup();
 
-    cy.then(() => ({ email: loginForm.email })).as("user");
+  //   cy.findByRole("link", { name: /Crear perfil/i }).click();
 
-    cy.visitAndCheck("/");
+  //   const clienteForm = {
+  //     nombre: faker.person.fullName(),
+  //     apellido: faker.person.lastName(),
+  //     direccion: faker.location.streetAddress(),
+  //     pais: faker.location.country(),
+  //     ciudad: faker.location.city(),
+  //     avatar: faker.image.url(),
+  //   };
 
-    cy.findByRole("link", { name: /Ingresar/i }).click();
+  //   cy.findByRole("textbox", { name: /nombre/i }).type(clienteForm.nombre);
+  //   cy.findByRole("textbox", { name: /apellido/i }).type(clienteForm.apellido);
+  //   cy.findByRole("textbox", { name: /direccion/i }).type(
+  //     clienteForm.direccion,
+  //   );
+  //   cy.findByRole("textbox", { name: /pais/i }).type(clienteForm.pais);
+  //   cy.findByRole("textbox", { name: /ciudad/i }).type(clienteForm.ciudad);
+  //   cy.findByRole("textbox", { name: /avatar/i }).type(clienteForm.avatar);
 
-    cy.findByRole("link", { name: /sign up/i }).click();
+  //   cy.findByRole("button", { name: /save/i }).click();
 
-    cy.findByRole("textbox", { name: /email/i }).type(loginForm.email);
-    cy.findByLabelText(/password/i).type(loginForm.password);
-    cy.findByRole("button", { name: /create account/i }).click();
+  //   cy.findByText("Perfil");
+  // });
+
+  it("should allow you to register and create a dj perfil", () => {
+    signup();
 
     cy.findByRole("link", { name: /Crear perfil/i }).click();
 
@@ -54,15 +86,41 @@ describe("smoke tests", () => {
       direccion: faker.location.streetAddress(),
       pais: faker.location.country(),
       ciudad: faker.location.city(),
-      avatar: faker.image.url()
+      avatar: faker.image.url(),
+      descripcion: faker.lorem.paragraph(),
+      genero: faker.lorem.word(),
+      artista: faker.lorem.word(),
     };
-
+    
+    cy.findByRole("switch", { name: /Sos DJ/i }).click();
     cy.findByRole("textbox", { name: /nombre/i }).type(clienteForm.nombre);
     cy.findByRole("textbox", { name: /apellido/i }).type(clienteForm.apellido);
-    cy.findByRole("textbox", { name: /direccion/i }).type(clienteForm.direccion);
-    cy.findByRole("textbox", { name: /pais/i }).type(clienteForm.pais);
-    cy.findByRole("textbox", { name: /ciudad/i }).type(clienteForm.ciudad);
-    cy.findByRole("textbox", { name: /avatar/i }).type(clienteForm.avatar);
+    cy.findByRole("textbox", { name: /direccion/i }).type(
+      clienteForm.direccion,
+      );
+      cy.findByRole("textbox", { name: /pais/i }).type(clienteForm.pais);
+      cy.findByRole("textbox", { name: /ciudad/i }).type(clienteForm.ciudad);
+      cy.findByRole("textbox", { name: /avatar/i }).type(clienteForm.avatar);
+
+    cy.findByRole("textbox", { name: /descripcion/i }).type(
+      clienteForm.descripcion,
+    );
+
+    // cy.findByRole("textbox", { name: /generos/i })
+    //   .type(clienteForm.genero)
+    //   .siblings()
+    //   .findByRole("button", { name: /Agregar/i })
+    //   .click();
+
+    cy.get("#generos")
+      .type(clienteForm.genero)
+      .siblings("button")
+      .click();
+
+    cy.findByRole("textbox", { name: /referencias/i })
+      .type(clienteForm.artista)
+      .siblings("button")
+      .click();
 
     cy.findByRole("button", { name: /save/i }).click();
 
