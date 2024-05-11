@@ -10,7 +10,7 @@ export function createDJ({
   generos,
   artistasReferencias,
   userId,
-}: Omit<DJ, "clientesFaveados"> & {
+}: Omit<DJ, "clientesFaveados" | "id"> & {
   userId: User["id"];
   generos: string[];
   artistasReferencias: Artista[];
@@ -41,6 +41,7 @@ export function createDJ({
     },
     include: {
       generos: true,
+      artistasReferencias: true,
     },
   });
 }

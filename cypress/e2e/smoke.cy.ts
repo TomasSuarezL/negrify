@@ -106,12 +106,6 @@ describe("smoke tests", () => {
       clienteForm.descripcion,
     );
 
-    // cy.findByRole("textbox", { name: /generos/i })
-    //   .type(clienteForm.genero)
-    //   .siblings()
-    //   .findByRole("button", { name: /Agregar/i })
-    //   .click();
-
     cy.get("#generos")
       .type(clienteForm.genero)
       .siblings("button")

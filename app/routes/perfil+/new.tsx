@@ -10,6 +10,7 @@ import { Label } from "~/components/ui/label";
 import { MultiInput } from "~/components/ui/multiInput";
 import { Switch } from "~/components/ui/switch";
 import { createCliente } from "~/models/cliente.server";
+import { createDJ } from "~/models/dj.server";
 import { createUbicacion } from "~/models/ubicacion.server";
 import { requireUserId } from "~/session.server";
 
@@ -19,7 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const formPayload = Object.fromEntries(formData);
 
-  const generos = formData.getAll("generos");
+  const generos: string[] = formData.getAll("generos");
 
   const perfilSchema = z.object({
     nombre: z.string().min(2),
@@ -30,12 +31,27 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     avatar: z.string().min(2),
   });
 
+  const djSchema = z.object({
+    descripcion: z.string(),
+  });
+
   try {
     let id = null;
     const { nombre, apellido, pais, ciudad, direccion, avatar } =
       perfilSchema.parse(formPayload);
 
     if (!!formPayload["dj-mode"]) {
+      const { descripcion } = djSchema.parse(formPayload);
+
+      const dj = await createDJ({
+        nombre,
+        userId,
+        avatar,
+        descripcion,
+        generos,
+        background: "",
+        artistasReferencias: [],
+      });
     } else {
       const cliente = await createCliente({
         nombre,
