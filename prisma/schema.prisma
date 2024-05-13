@@ -16,7 +16,7 @@ model User {
 
   password Password?
   dj       DJ?
-  Cliente  Cliente?
+  cliente  Cliente?
 }
 
 model Password {

@@ -8,11 +8,11 @@ export type { User } from "@prisma/client";
 export type UserWithRelations = Prisma.UserGetPayload<{
   include: {
     dj?: true,
-    Cliente?: true}
+    cliente?: true}
 }>
 
 export async function getUserById(id: User["id"]) {
-  return prisma.user.findUnique({ where: { id }, include: { dj: true, Cliente: true} });
+  return prisma.user.findUnique({ where: { id }, include: { dj: true, cliente: true} });
 }
 
 export async function getUserByEmail(email: User["email"]) {

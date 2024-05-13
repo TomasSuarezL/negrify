@@ -1,4 +1,4 @@
-import type { User, DJ, Genero, Ubicacion, Artista } from "@prisma/client";
+import type { User, DJ } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -13,7 +13,7 @@ export function createDJ({
 }: Omit<DJ, "clientesFaveados" | "id"> & {
   userId: User["id"];
   generos: string[];
-  artistasReferencias: Artista[];
+  artistasReferencias: string[];
 }) {
   return prisma.dJ.create({
     data: {
@@ -29,8 +29,8 @@ export function createDJ({
       },
       artistasReferencias: {
         connectOrCreate: artistasReferencias.map((a) => ({
-          where: { nombre: a.nombre },
-          create: a,
+          where: { nombre: a },
+          create: { nombre: a },
         })),
       },
       user: {

@@ -20,7 +20,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const formPayload = Object.fromEntries(formData);
 
-  const generos: string[] = formData.getAll("generos");
+  const generos: string[] = formData
+    .getAll("generos")
+    .map((entry) => entry.toString());
+  const referencias: string[] = formData
+    .getAll("referencias")
+    .map((entry) => entry.toString());
 
   const perfilSchema = z.object({
     nombre: z.string().min(2),
@@ -50,7 +55,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         descripcion,
         generos,
         background: "",
-        artistasReferencias: [],
+        artistasReferencias: referencias,
+      });
+
+      // ToDo: Move to atomic transaction;?
+      await createUbicacion({
+        pais,
+        ciudad,
+        direccion,
+        longitud: null,
+        latitud: null,
+        clienteId: null,
+        djId: dj.id,
       });
     } else {
       const cliente = await createCliente({
@@ -61,18 +77,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
 
       id = cliente.id;
-    }
 
-    // ToDo: Move to atomic transaction;?
-    await createUbicacion({
-      pais,
-      ciudad,
-      direccion,
-      longitud: null,
-      latitud: null,
-      clienteId: id,
-      djId: id,
-    });
+      // ToDo: Move to atomic transaction;?
+      await createUbicacion({
+        pais,
+        ciudad,
+        direccion,
+        longitud: null,
+        latitud: null,
+        clienteId: cliente.id,
+        djId: null,
+      });
+    }
 
     return redirect("/perfil");
   } catch (error) {
