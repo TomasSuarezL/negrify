@@ -45,3 +45,23 @@ export function createDJ({
     },
   });
 }
+
+export function getDJs() {
+  return prisma.dJ.findMany({
+    include: {
+      generos: true,
+      artistasReferencias: true,
+    },
+  });
+}
+
+export function getDjByUserId(userId: User["id"]) {
+  return prisma.dJ.findUnique({
+    where: { userId },
+    include: {
+      generos: true,
+      artistasReferencias: true,
+      ubicacion: true
+    },
+  });
+}

@@ -1,7 +1,7 @@
 import { Ubicacion } from "@prisma/client";
 import { prisma } from "~/db.server";
 
-export function createUbicacion({
+export const createUbicacion = ({
   ciudad,
   pais,
   direccion,
@@ -9,7 +9,7 @@ export function createUbicacion({
   latitud,
   clienteId,
   djId,
-}: Omit<Ubicacion, "id">) {
+}: Omit<Ubicacion, "id">) => {
   if (clienteId) {
     return prisma.ubicacion.create({
       data: {
@@ -41,7 +41,4 @@ export function createUbicacion({
       },
     });
   }
-
-  // ...(clienteId && { cliente: { connect: { id: clienteId } } }),
-  // ...(djId && { dj: { connect: { id: djId } } }),
 }

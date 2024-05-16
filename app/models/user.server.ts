@@ -7,12 +7,32 @@ export type { User } from "@prisma/client";
 
 export type UserWithRelations = Prisma.UserGetPayload<{
   include: {
-    dj?: true,
-    cliente?: true}
-}>
+    dj?: {
+      include: {
+        clientesFaveados: true;
+        ubicacion: true;
+        reviews: true;
+        artistasReferencias: true;
+        generos: true;
+        redes: true;
+        descripcion: true
+      };
+    };
+    cliente?: {
+      include: {
+        clientesFaveados: true;
+        ubicacion: true;
+        reviews: true;
+      };
+    };
+  };
+}>;
 
 export async function getUserById(id: User["id"]) {
-  return prisma.user.findUnique({ where: { id }, include: { dj: true, cliente: true} });
+  return prisma.user.findUnique({
+    where: { id },
+    include: { dj: true, cliente: true },
+  });
 }
 
 export async function getUserByEmail(email: User["email"]) {

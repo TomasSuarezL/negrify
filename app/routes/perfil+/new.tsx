@@ -130,9 +130,12 @@ export default function NewPerfilPage() {
   }, [actionData]);
 
   return (
-    <div className="flex flex-col items-center w-full container">
+    <div className="flex-1 flex flex-col items-center w-full p-8 overflow-auto">
       <h3 className="text-5xl pb-8">Crear Nuevo Perfil</h3>
-      <Form method="post" className="flex flex-col gap-1 w-5/6 p-8 border">
+      <Form
+        method="post"
+        className="flex-1 flex flex-col gap-1 w-5/6 max-w-4xl p-8 border bg-slate-50 mb-8"
+      >
         <div className="flex items-center space-x-2 pb-8">
           <Switch
             id="dj-mode"

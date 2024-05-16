@@ -2,7 +2,7 @@ import { Form, Link, Outlet } from "@remix-run/react";
 
 import { useUser } from "~/lib/routingUtils";
 
-export default function NotesPage() {
+export default function DjsPage() {
   const user = useUser();
 
   return (

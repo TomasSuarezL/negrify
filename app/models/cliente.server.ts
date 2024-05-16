@@ -24,3 +24,13 @@ export function createCliente({
   });
 }
 
+export const getClienteByUserId = (userId: User["id"]) => {
+  return prisma.cliente.findFirst({
+    where: {
+      userId,
+    },
+    include: {
+      ubicacion: true,
+    },
+  });
+};
