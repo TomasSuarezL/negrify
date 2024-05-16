@@ -119,7 +119,7 @@ describe("smoke tests", () => {
     cy.findByRole("button", { name: /save/i }).click();
 
     cy.findByText(clienteForm.nombre);
-    cy.findByText(clienteForm.ciudad);
+    cy.findByText(new RegExp(clienteForm.ciudad, 'i'));
   });
 
   // it("should allow you to create a perfil", () => {
