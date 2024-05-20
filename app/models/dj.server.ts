@@ -1,4 +1,5 @@
 import type { User, DJ } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/library";
 
 import { prisma } from "~/db.server";
 
@@ -10,10 +11,12 @@ export function createDJ({
   generos,
   artistasReferencias,
   userId,
-}: Omit<DJ, "clientesFaveados" | "id"> & {
+  rate
+}: Omit<DJ, "clientesFaveados" | "id" | "rate"> & {
   userId: User["id"];
   generos: string[];
   artistasReferencias: string[];
+  rate: number;
 }) {
   return prisma.dJ.create({
     data: {
@@ -21,6 +24,7 @@ export function createDJ({
       avatar,
       background,
       descripcion,
+      rate: new Decimal(rate),
       generos: {
         connectOrCreate: generos.map((g) => ({
           where: { descripcion: g },

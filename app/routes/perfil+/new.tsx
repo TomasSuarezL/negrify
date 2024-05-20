@@ -38,15 +38,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const djSchema = z.object({
     descripcion: z.string(),
+    rate: z.number(),
   });
 
   try {
-    let id = null;
     const { nombre, apellido, pais, ciudad, direccion, avatar } =
       perfilSchema.parse(formPayload);
 
     if (!!formPayload["dj-mode"]) {
-      const { descripcion } = djSchema.parse(formPayload);
+      const { descripcion, rate } = djSchema.parse(formPayload);
 
       const dj = await createDJ({
         nombre,
@@ -54,6 +54,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         avatar,
         descripcion,
         generos,
+        rate,
         background: "",
         artistasReferencias: referencias,
       });
@@ -75,8 +76,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         apellido,
         avatar,
       });
-
-      id = cliente.id;
 
       // ToDo: Move to atomic transaction;?
       await createUbicacion({
@@ -293,6 +292,31 @@ export default function NewPerfilPage() {
                     : undefined
                 }
               />
+              {actionData?.errors?.descripcion ? (
+                <div className="pt-1 h-8 text-red-700" id="avatar-error">
+                  {actionData.errors.descripcion}
+                </div>
+              ) : (
+                <div className="pt-1 h-8"></div>
+              )}
+            </div>
+            <div className="grid w-full  items-center gap-1.5">
+              <Label>Precio Por Hora</Label>
+              <Input
+                type="number"
+                id="rate"
+                name="rate"
+                placeholder="Precio por hora"
+                aria-invalid={
+                  actionData?.errors?.descripcion ? true : undefined
+                }
+                aria-errormessage={
+                  actionData?.errors?.descripcion
+                    ? "descripcion-error"
+                    : undefined
+                }
+              />
+
               {actionData?.errors?.avatar ? (
                 <div className="pt-1 h-8 text-red-700" id="avatar-error">
                   {actionData.errors.avatar}

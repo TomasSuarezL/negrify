@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "DJ" ADD COLUMN "rate" DECIMAL;

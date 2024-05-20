@@ -38,6 +38,7 @@ model DJ {
   avatar              String
   background          String
   descripcion         String
+  rate                Decimal?
   artistasReferencias Artista[]
   redes               RedSocial[]
   clientesFaveados    Cliente[]
