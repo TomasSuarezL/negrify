@@ -1,4 +1,5 @@
 import { useLoaderData } from "@remix-run/react";
+import { Button } from "~/components/ui/button";
 import { getDJs } from "~/models/dj.server";
 
 export const loader = async () => {
@@ -17,14 +18,16 @@ export default function DjIndexPage() {
           <div className="flex w-48 h-48">
             <img className="w-full object-cover" src={dj.avatar} />
           </div>
-          <div className="flex flex-col">
-            <p>{dj.nombre}</p>
-            <div className="flex flex-row">
-              {dj.generos.map((g) => (
-                <p key={g.id}>{g.descripcion}</p>
-              ))}
+          <div className="flex flex-col p-6">
+            <p className="text-2xl font-black">{dj.nombre}</p>
+            <p className="italic">
+              {dj.generos.map((g) => g.descripcion).join(" - ")}
+            </p>
+            <p>{`${dj.rate}$ / hora`}</p>
+            <div className="flex-1 flex flex-row space-x-4 items-end">
+              <Button>Ver Perfil</Button>
+              <Button variant={"secondary"}>Contratar</Button>
             </div>
-            <p>{dj.generos.map((g) => g.descripcion).join(" - ")}</p>
           </div>
         </div>
       ))}
