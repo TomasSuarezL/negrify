@@ -21,10 +21,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formPayload = Object.fromEntries(formData);
 
   const generos: string[] = formData
-    .getAll("generos")
+    .getAll("generos[]")
     .map((entry) => entry.toString());
   const referencias: string[] = formData
-    .getAll("referencias")
+    .getAll("referencias[]")
     .map((entry) => entry.toString());
 
   const perfilSchema = z.object({
@@ -159,11 +159,11 @@ export default function NewPerfilPage() {
             }
           />
           {actionData?.errors?.nombre ? (
-            <div className="pt-1 h-8 text-red-700" id="nombre-error">
+            <div className="pt-1 min-h-8 text-red-700" id="nombre-error">
               {actionData.errors.nombre}
             </div>
           ) : (
-            <div className="pt-1 h-8"></div>
+            <div className="pt-1 min-h-8"></div>
           )}
         </div>
         <div className="grid w-full  items-center gap-1.5">
@@ -180,11 +180,11 @@ export default function NewPerfilPage() {
             }
           />
           {actionData?.errors?.apellido ? (
-            <div className="pt-1 h-8 text-red-700" id="apellido-error">
+            <div className="pt-1 min-h-8 text-red-700" id="apellido-error">
               {actionData.errors.apellido}
             </div>
           ) : (
-            <div className="pt-1 h-8"></div>
+            <div className="pt-1 min-h-8"></div>
           )}
         </div>
         <div className="flex flex-row w-full items-center space-x-2">
@@ -201,12 +201,12 @@ export default function NewPerfilPage() {
                 actionData?.errors?.pais ? "pais-error" : undefined
               }
             />
-            {actionData?.errors?.apellido ? (
-              <div className="pt-1 h-8 text-red-700" id="apellido-error">
-                {actionData.errors.apellido}
+            {actionData?.errors?.pais ? (
+              <div className="pt-1 min-h-8 text-red-700" id="pais-error">
+                {actionData.errors.pais}
               </div>
             ) : (
-              <div className="pt-1 h-8"></div>
+              <div className="pt-1 min-h-8"></div>
             )}
           </div>
           <div className="flex-1 grid items-center gap-1.5">
@@ -223,11 +223,11 @@ export default function NewPerfilPage() {
               }
             />
             {actionData?.errors?.ciudad ? (
-              <div className="pt-1 h-8 text-red-700" id="ciudad-error">
+              <div className="pt-1 min-h-8 text-red-700" id="ciudad-error">
                 {actionData.errors.ciudad}
               </div>
             ) : (
-              <div className="pt-1 h-8"></div>
+              <div className="pt-1 min-h-8"></div>
             )}
           </div>
           <div className="flex-1 grid items-center gap-1.5">
@@ -244,11 +244,11 @@ export default function NewPerfilPage() {
               }
             />
             {actionData?.errors?.direccion ? (
-              <div className="pt-1 h-8 text-red-700" id="direccion-error">
+              <div className="pt-1 min-h-8 text-red-700" id="direccion-error">
                 {actionData.errors.direccion}
               </div>
             ) : (
-              <div className="pt-1 h-8"></div>
+              <div className="pt-1 min-h-8"></div>
             )}
           </div>
         </div>
@@ -266,11 +266,11 @@ export default function NewPerfilPage() {
             }
           />
           {actionData?.errors?.avatar ? (
-            <div className="pt-1 h-8 text-red-700" id="avatar-error">
+            <div className="pt-1 min-h-8 text-red-700" id="avatar-error">
               {actionData.errors.avatar}
             </div>
           ) : (
-            <div className="pt-1 h-8"></div>
+            <div className="pt-1 min-h-8"></div>
           )}
         </div>
         {isDJ && (
@@ -293,11 +293,11 @@ export default function NewPerfilPage() {
                 }
               />
               {actionData?.errors?.descripcion ? (
-                <div className="pt-1 h-8 text-red-700" id="avatar-error">
+                <div className="pt-1 min-h-8 text-red-700" id="avatar-error">
                   {actionData.errors.descripcion}
                 </div>
               ) : (
-                <div className="pt-1 h-8"></div>
+                <div className="pt-1 min-h-8"></div>
               )}
             </div>
             <div className="grid w-full  items-center gap-1.5">
@@ -319,11 +319,11 @@ export default function NewPerfilPage() {
               />
 
               {actionData?.errors?.rate ? (
-                <div className="pt-1 h-8 text-red-700" id="avatar-error">
+                <div className="pt-1 min-h-8 text-red-700" id="avatar-error">
                   {actionData.errors.rate}
                 </div>
               ) : (
-                <div className="pt-1 h-8"></div>
+                <div className="pt-1 min-h-8"></div>
               )}
             </div>
             <Label htmlFor="generos">Generos</Label>
