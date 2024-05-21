@@ -69,3 +69,14 @@ export function getDjByUserId(userId: User["id"]) {
     },
   });
 }
+
+export function getDjById(id: DJ["id"]) {
+  return prisma.dJ.findUnique({
+    where: { id },
+    include: {
+      generos: true,
+      artistasReferencias: true,
+      ubicacion: true
+    },
+  });
+}

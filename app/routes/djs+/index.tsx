@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import { NavLink, useLoaderData } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import { getDJs } from "~/models/dj.server";
 
@@ -25,7 +25,9 @@ export default function DjIndexPage() {
             </p>
             <p>{`${dj.rate}$ / hora`}</p>
             <div className="flex-1 flex flex-row space-x-4 items-end">
-              <Button>Ver Perfil</Button>
+              <NavLink to={dj.id}>
+                <Button>Ver Perfil</Button>
+              </NavLink>
               <Button variant={"secondary"}>Contratar</Button>
             </div>
           </div>
