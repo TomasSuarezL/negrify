@@ -88,6 +88,7 @@ describe("smoke tests", () => {
       ciudad: faker.location.city(),
       avatar: faker.image.url(),
       descripcion: faker.lorem.paragraph(),
+      rate: faker.number.float(),
       genero: faker.lorem.word(),
       artista: faker.lorem.word(),
     };
@@ -104,6 +105,9 @@ describe("smoke tests", () => {
 
     cy.findByRole("textbox", { name: /descripcion/i }).type(
       clienteForm.descripcion,
+    );
+    cy.findByRole("spinbutton", { name: /Precio/i }).type(
+      clienteForm.rate.toString(),
     );
 
     cy.get("#generos")

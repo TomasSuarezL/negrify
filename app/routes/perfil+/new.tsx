@@ -38,7 +38,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const djSchema = z.object({
     descripcion: z.string(),
-    rate: z.number(),
+    rate: z.coerce.number().gt(0),
   });
 
   try {
@@ -301,9 +301,10 @@ export default function NewPerfilPage() {
               )}
             </div>
             <div className="grid w-full  items-center gap-1.5">
-              <Label>Precio Por Hora</Label>
+              <Label htmlFor="rate">Precio Por Hora</Label>
               <Input
                 type="number"
+                step="any"
                 id="rate"
                 name="rate"
                 placeholder="Precio por hora"
@@ -317,9 +318,9 @@ export default function NewPerfilPage() {
                 }
               />
 
-              {actionData?.errors?.avatar ? (
+              {actionData?.errors?.rate ? (
                 <div className="pt-1 h-8 text-red-700" id="avatar-error">
-                  {actionData.errors.avatar}
+                  {actionData.errors.rate}
                 </div>
               ) : (
                 <div className="pt-1 h-8"></div>
