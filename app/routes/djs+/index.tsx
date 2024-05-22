@@ -14,7 +14,7 @@ export default function DjIndexPage() {
   return (
     <div className="flex flex-col space-y-4 p-8 w-full h-full container">
       {data.data.map((dj) => (
-        <div key={dj.id} className="flex flex-row bg-slate-50 p-4">
+        <div key={dj.id} className="flex flex-row bg-slate-100 p-4">
           <div className="flex w-48 h-48">
             <img className="w-full object-cover" src={dj.avatar} />
           </div>
