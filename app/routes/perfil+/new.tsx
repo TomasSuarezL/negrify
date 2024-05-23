@@ -45,7 +45,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const { nombre, apellido, pais, ciudad, direccion, avatar } =
       perfilSchema.parse(formPayload);
 
-    if (!!formPayload["dj-mode"]) {
+    if (formPayload["dj-mode"]) {
       const { descripcion, rate } = djSchema.parse(formPayload);
 
       const dj = await createDJ({

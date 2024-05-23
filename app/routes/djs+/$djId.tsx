@@ -10,7 +10,7 @@ import { Button } from "~/components/ui/button";
 import { ubicacionToString } from "~/lib/utils";
 import { getDjById } from "~/models/dj.server";
 
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.djId, "djId not found");
 
   const dj = await getDjById(params.djId);
