@@ -24,18 +24,20 @@ async function seed() {
     },
   });
 
-  await prisma.note.create({
+  await prisma.dJ.create({
     data: {
-      title: "My first note",
-      body: "Hello, world!",
-      userId: user.id,
-    },
-  });
-
-  await prisma.note.create({
-    data: {
-      title: "My second note",
-      body: "Hello, world!",
+      nombre: "Dj. Rachele",
+      avatar: "https://i.pravatar.cc/150",
+      descripcion:
+        "Aurum vobis nostrum tubineus ademptio supra cupiditas solum. Utrum colo ascit assentator volo. Crinis nulla trucido tabernus una minus cursim.",
+      generos: {
+        create: [
+          { descripcion: "House" },
+          { descripcion: "Electro" },
+          { descripcion: "Disco" },
+        ],
+      },
+      background: "backgraund url",
       userId: user.id,
     },
   });
