@@ -1,19 +1,31 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z, ZodError } from "zod";
+import { Button } from "~/components/ui/button";
 
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { MultiInput } from "~/components/ui/multiInput";
 import { Switch } from "~/components/ui/switch";
-import { createCliente, createUbicacion } from "~/models/cliente.server";
+import { createCliente } from "~/models/cliente.server";
+import { createDJ } from "~/models/dj.server";
+import { createUbicacion } from "~/models/ubicacion.server";
 import { requireUserId } from "~/session.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
 
-  const formPayload = Object.fromEntries(await request.formData());
+  const formData = await request.formData();
+  const formPayload = Object.fromEntries(formData);
+
+  const generos: string[] = formData
+    .getAll("generos[]")
+    .map((entry) => entry.toString());
+  const referencias: string[] = formData
+    .getAll("referencias[]")
+    .map((entry) => entry.toString());
 
   const perfilSchema = z.object({
     nombre: z.string().min(2),
@@ -24,23 +36,59 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     avatar: z.string().min(2),
   });
 
+  const djSchema = z.object({
+    descripcion: z.string(),
+    rate: z.coerce.number().gt(0),
+  });
+
   try {
     const { nombre, apellido, pais, ciudad, direccion, avatar } =
       perfilSchema.parse(formPayload);
-    const ubicacion = await createUbicacion({
-      pais,
-      ciudad,
-      direccion,
-      longitud: null,
-      latitud: null,
-    });
-    await createCliente({
-      nombre,
-      userId,
-      apellido,
-      ubicacionId: ubicacion.id,
-      avatar,
-    });
+
+    if (formPayload["dj-mode"]) {
+      const { descripcion, rate } = djSchema.parse(formPayload);
+
+      const dj = await createDJ({
+        nombre,
+        userId,
+        avatar,
+        descripcion,
+        generos,
+        rate,
+        background: "",
+        artistasReferencias: referencias,
+      });
+
+      // ToDo: Move to atomic transaction;?
+      await createUbicacion({
+        pais,
+        ciudad,
+        direccion,
+        longitud: null,
+        latitud: null,
+        clienteId: null,
+        djId: dj.id,
+      });
+    } else {
+      const cliente = await createCliente({
+        nombre,
+        userId,
+        apellido,
+        avatar,
+      });
+
+      // ToDo: Move to atomic transaction;?
+      await createUbicacion({
+        pais,
+        ciudad,
+        direccion,
+        longitud: null,
+        latitud: null,
+        clienteId: cliente.id,
+        djId: null,
+      });
+    }
+
     return redirect("/perfil");
   } catch (error) {
     let errorMap: Record<keyof typeof formPayload, string> = {};
@@ -67,6 +115,9 @@ export default function NewPerfilPage() {
   const ciudadRef = useRef<HTMLInputElement>(null);
   const direccionRef = useRef<HTMLInputElement>(null);
   const avatarRef = useRef<HTMLInputElement>(null);
+  const descripcionRef = useRef<HTMLInputElement>(null);
+
+  const [isDJ, setIsDJ] = useState(false);
 
   useEffect(() => {
     console.log(actionData?.errors?.nombre);
@@ -78,17 +129,26 @@ export default function NewPerfilPage() {
   }, [actionData]);
 
   return (
-    <div className="flex flex-col items-center w-full container">
+    <div className="flex-1 flex flex-col items-center w-full p-8 overflow-auto">
       <h3 className="text-5xl pb-8">Crear Nuevo Perfil</h3>
-      <Form method="post" className="flex flex-col gap-1 w-5/6 p-8 border">
+      <Form
+        method="post"
+        className="flex-1 flex flex-col gap-1 w-5/6 max-w-4xl p-8 border bg-slate-50 mb-8"
+      >
         <div className="flex items-center space-x-2 pb-8">
-          <Switch id="dj-mode" />
+          <Switch
+            id="dj-mode"
+            name="dj-mode"
+            checked={isDJ}
+            onCheckedChange={() => setIsDJ(!isDJ)}
+          />
           <Label htmlFor="dj-mode">Sos DJ?</Label>
         </div>
         <div className="grid w-full  items-center gap-1.5">
-          <Label htmlFor="title">Nombre</Label>
+          <Label htmlFor="nombre">Nombre</Label>
           <Input
             type="text"
+            role="textbox"
             id="nombre"
             name="nombre"
             placeholder="Nombre"
@@ -99,15 +159,15 @@ export default function NewPerfilPage() {
             }
           />
           {actionData?.errors?.nombre ? (
-            <div className="pt-1 h-8 text-red-700" id="nombre-error">
+            <div className="pt-1 min-h-8 text-red-700" id="nombre-error">
               {actionData.errors.nombre}
             </div>
           ) : (
-            <div className="pt-1 h-8"></div>
+            <div className="pt-1 min-h-8"></div>
           )}
         </div>
         <div className="grid w-full  items-center gap-1.5">
-          <Label htmlFor="title">Apellido</Label>
+          <Label htmlFor="apellido">Apellido</Label>
           <Input
             type="text"
             id="apellido"
@@ -120,16 +180,16 @@ export default function NewPerfilPage() {
             }
           />
           {actionData?.errors?.apellido ? (
-            <div className="pt-1 h-8 text-red-700" id="apellido-error">
+            <div className="pt-1 min-h-8 text-red-700" id="apellido-error">
               {actionData.errors.apellido}
             </div>
           ) : (
-            <div className="pt-1 h-8"></div>
+            <div className="pt-1 min-h-8"></div>
           )}
         </div>
         <div className="flex flex-row w-full items-center space-x-2">
           <div className="flex-1 grid items-center gap-1.5">
-            <Label htmlFor="title">Pais</Label>
+            <Label htmlFor="pais">Pais</Label>
             <Input
               type="text"
               id="pais"
@@ -141,16 +201,16 @@ export default function NewPerfilPage() {
                 actionData?.errors?.pais ? "pais-error" : undefined
               }
             />
-            {actionData?.errors?.apellido ? (
-              <div className="pt-1 h-8 text-red-700" id="apellido-error">
-                {actionData.errors.apellido}
+            {actionData?.errors?.pais ? (
+              <div className="pt-1 min-h-8 text-red-700" id="pais-error">
+                {actionData.errors.pais}
               </div>
             ) : (
-              <div className="pt-1 h-8"></div>
+              <div className="pt-1 min-h-8"></div>
             )}
           </div>
           <div className="flex-1 grid items-center gap-1.5">
-            <Label htmlFor="title">Ciudad</Label>
+            <Label htmlFor="ciudad">Ciudad</Label>
             <Input
               type="text"
               id="ciudad"
@@ -163,15 +223,15 @@ export default function NewPerfilPage() {
               }
             />
             {actionData?.errors?.ciudad ? (
-              <div className="pt-1 h-8 text-red-700" id="ciudad-error">
+              <div className="pt-1 min-h-8 text-red-700" id="ciudad-error">
                 {actionData.errors.ciudad}
               </div>
             ) : (
-              <div className="pt-1 h-8"></div>
+              <div className="pt-1 min-h-8"></div>
             )}
           </div>
           <div className="flex-1 grid items-center gap-1.5">
-            <Label htmlFor="title">Direccion</Label>
+            <Label htmlFor="direccion">Direccion</Label>
             <Input
               type="text"
               id="direccion"
@@ -184,16 +244,16 @@ export default function NewPerfilPage() {
               }
             />
             {actionData?.errors?.direccion ? (
-              <div className="pt-1 h-8 text-red-700" id="direccion-error">
+              <div className="pt-1 min-h-8 text-red-700" id="direccion-error">
                 {actionData.errors.direccion}
               </div>
             ) : (
-              <div className="pt-1 h-8"></div>
+              <div className="pt-1 min-h-8"></div>
             )}
           </div>
         </div>
         <div className="grid w-full  items-center gap-1.5">
-          <Label htmlFor="title">Avatar</Label>
+          <Label htmlFor="avatar">Avatar</Label>
           <Input
             type="text"
             id="avatar"
@@ -206,21 +266,82 @@ export default function NewPerfilPage() {
             }
           />
           {actionData?.errors?.avatar ? (
-            <div className="pt-1 h-8 text-red-700" id="avatar-error">
+            <div className="pt-1 min-h-8 text-red-700" id="avatar-error">
               {actionData.errors.avatar}
             </div>
           ) : (
-            <div className="pt-1 h-8"></div>
+            <div className="pt-1 min-h-8"></div>
           )}
         </div>
+        {isDJ && (
+          <>
+            <div className="grid w-full  items-center gap-1.5">
+              <Label htmlFor="descripcion">Descripcion</Label>
+              <Input
+                type="text"
+                id="descripcion"
+                name="descripcion"
+                placeholder="Descripcion"
+                ref={descripcionRef}
+                aria-invalid={
+                  actionData?.errors?.descripcion ? true : undefined
+                }
+                aria-errormessage={
+                  actionData?.errors?.descripcion
+                    ? "descripcion-error"
+                    : undefined
+                }
+              />
+              {actionData?.errors?.descripcion ? (
+                <div className="pt-1 min-h-8 text-red-700" id="avatar-error">
+                  {actionData.errors.descripcion}
+                </div>
+              ) : (
+                <div className="pt-1 min-h-8"></div>
+              )}
+            </div>
+            <div className="grid w-full  items-center gap-1.5">
+              <Label htmlFor="rate">Precio Por Hora</Label>
+              <Input
+                type="number"
+                step="any"
+                id="rate"
+                name="rate"
+                placeholder="Precio por hora"
+                aria-invalid={
+                  actionData?.errors?.descripcion ? true : undefined
+                }
+                aria-errormessage={
+                  actionData?.errors?.descripcion
+                    ? "descripcion-error"
+                    : undefined
+                }
+              />
 
+              {actionData?.errors?.rate ? (
+                <div className="pt-1 min-h-8 text-red-700" id="avatar-error">
+                  {actionData.errors.rate}
+                </div>
+              ) : (
+                <div className="pt-1 min-h-8"></div>
+              )}
+            </div>
+            <Label htmlFor="generos">Generos</Label>
+            <MultiInput
+              name="generos"
+              placeholder="Generos"
+              error={actionData?.errors.generos}
+            />
+            <Label htmlFor="referencias">Referencias</Label>
+            <MultiInput
+              name="referencias"
+              placeholder="Artistas referencias"
+              error={actionData?.errors.referencias}
+            />
+          </>
+        )}
         <div className="text-right">
-          <button
-            type="submit"
-            className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-          >
-            Save
-          </button>
+          <Button type="submit">Save</Button>
         </div>
       </Form>
     </div>

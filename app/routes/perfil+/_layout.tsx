@@ -26,10 +26,8 @@ export default function NotesPage() {
         </Form>
       </header>
 
-      <main className="flex h-full bg-white">
-        <div className="flex-1 p-6">
-          <Outlet />
-        </div>
+      <main className="flex h-full bg-slate-100 overflow-auto">
+        <Outlet />
       </main>
     </div>
   );

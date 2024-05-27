@@ -1,4 +1,4 @@
-import type { User, Ubicacion, Cliente } from "@prisma/client";
+import type { User, Cliente } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -6,21 +6,15 @@ export function createCliente({
   nombre,
   apellido,
   avatar,
-  ubicacionId,
   userId,
 }: Omit<Cliente, "id"> & {
   userId: User["id"];
 }) {
-  return prisma.Cliente.create({
+  return prisma.cliente.create({
     data: {
       nombre,
       apellido,
       avatar,
-      ubicacion: {
-        connect: {
-          id: ubicacionId,
-        },
-      },
       user: {
         connect: {
           id: userId,
@@ -30,20 +24,13 @@ export function createCliente({
   });
 }
 
-export function createUbicacion({
-  ciudad,
-  pais,
-  direccion,
-  longitud,
-  latitud
-}: Omit<Ubicacion, "id">) {
-  return prisma.Ubicacion.create({
-    data: {
-      ciudad,
-      pais,
-      direccion,
-      longitud,
-      latitud
+export const getClienteByUserId = (userId: User["id"]) => {
+  return prisma.cliente.findFirst({
+    where: {
+      userId,
+    },
+    include: {
+      ubicacion: true,
     },
   });
-}
+};

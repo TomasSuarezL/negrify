@@ -16,7 +16,7 @@ model User {
 
   password Password?
   dj       DJ?
-  Cliente  Cliente?
+  cliente  Cliente?
 }
 
 model Password {
@@ -33,12 +33,12 @@ model DJ {
 
   nombre              String
   generos             Genero[]
-  ubicacion           Ubicacion   @relation(fields: [ubicacionId], references: [id])
-  ubicacionId         String
+  ubicacion           Ubicacion?
   reviews             Review[]
   avatar              String
   background          String
   descripcion         String
+  rate                Decimal?
   artistasReferencias Artista[]
   redes               RedSocial[]
   clientesFaveados    Cliente[]
@@ -49,13 +49,12 @@ model Cliente {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique
 
-  nombre      String
-  apellido    String
-  ubicacion   Ubicacion @relation(fields: [ubicacionId], references: [id])
-  ubicacionId String
-  avatar      String
-  favoritos   DJ[]
-  reviews     Review[]
+  nombre    String
+  apellido  String
+  avatar    String
+  favoritos DJ[]
+  reviews   Review[]
+  ubicacion Ubicacion?
 }
 
 model Genero {
@@ -65,36 +64,39 @@ model Genero {
 }
 
 model Ubicacion {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   pais      String
   ciudad    String
   direccion String
   latitud   String?
   longitud  String?
-  djs       DJ[]
-  cliente   Cliente[]
+  dj        DJ?      @relation(fields: [djId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  djId      String?  @unique
+  cliente   Cliente? @relation(fields: [clienteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  clienteId String?  @unique
 }
 
 model Review {
   id        Int     @id @default(autoincrement())
   rate      Int
   contenido String
-  dj        DJ      @relation(fields: [dJId], references: [id])
-  dJId      String
-  cliente   Cliente @relation(fields: [clienteId], references: [id])
+  dj        DJ      @relation(fields: [djId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  djId      String
+  cliente   Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   clienteId String
 }
 
 model Artista {
   id     Int     @id @default(autoincrement())
-  nombre String
-  DJ     DJ?     @relation(fields: [dJId], references: [id])
-  dJId   String?
+  nombre String  @unique
+  dj     DJ?     @relation(fields: [djId], references: [id])
+  djId   String?
 }
 
 model RedSocial {
   id     Int     @id @default(autoincrement())
   nombre String
-  DJ     DJ?     @relation(fields: [dJId], references: [id])
-  dJId   String?
+  url    String
+  dj     DJ?     @relation(fields: [djId], references: [id])
+  djId   String?
 }

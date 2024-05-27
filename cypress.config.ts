@@ -1,5 +1,4 @@
 import { defineConfig } from "cypress";
-import path from "path";
 
 export default defineConfig({
   e2e: {

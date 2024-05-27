@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { http, passthrough } = require("msw");
 const { setupServer } = require("msw/node");
 

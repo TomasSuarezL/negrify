@@ -1,4 +1,5 @@
-import type { User, DJ, Genero, Ubicacion } from "@prisma/client";
+import type { User, DJ } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/library";
 
 import { prisma } from "~/db.server";
 
@@ -8,12 +9,14 @@ export function createDJ({
   background,
   descripcion,
   generos,
-  ubicacion,
+  artistasReferencias,
   userId,
-}: Omit<DJ, "clientesFaveados"> & {
+  rate
+}: Omit<DJ, "clientesFaveados" | "id" | "rate"> & {
   userId: User["id"];
-  generos: Genero[];
-  ubicacion: Ubicacion;
+  generos: string[];
+  artistasReferencias: string[];
+  rate: number;
 }) {
   return prisma.dJ.create({
     data: {
@@ -21,14 +24,18 @@ export function createDJ({
       avatar,
       background,
       descripcion,
-      ubicacion: {
-        create: ubicacion,
-      },
+      rate: new Decimal(rate),
       generos: {
-        connectOrCreate: generos.map(g => ({
-          where: { descripcion: g.descripcion },
-          create: g,
-        }))
+        connectOrCreate: generos.map((g) => ({
+          where: { descripcion: g },
+          create: { descripcion: g },
+        })),
+      },
+      artistasReferencias: {
+        connectOrCreate: artistasReferencias.map((a) => ({
+          where: { nombre: a },
+          create: { nombre: a },
+        })),
       },
       user: {
         connect: {
@@ -38,6 +45,38 @@ export function createDJ({
     },
     include: {
       generos: true,
+      artistasReferencias: true,
+    },
+  });
+}
+
+export function getDJs() {
+  return prisma.dJ.findMany({
+    include: {
+      generos: true,
+      artistasReferencias: true,
+    },
+  });
+}
+
+export function getDjByUserId(userId: User["id"]) {
+  return prisma.dJ.findUnique({
+    where: { userId },
+    include: {
+      generos: true,
+      artistasReferencias: true,
+      ubicacion: true
+    },
+  });
+}
+
+export function getDjById(id: DJ["id"]) {
+  return prisma.dJ.findUnique({
+    where: { id },
+    include: {
+      generos: true,
+      artistasReferencias: true,
+      ubicacion: true
     },
   });
 }
