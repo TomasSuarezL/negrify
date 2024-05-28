@@ -83,7 +83,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-full flex-col justify-center">
-      <div className="mx-auto max-w-md p-8 border bg-zinc-950 w-full">
+      <div className="mx-auto max-w-md p-8 bg-zinc-950 w-full">
         <h1 className="text-6xl font-bold text-white mx-auto w-fit pb-10">
           Negrify
         </h1>

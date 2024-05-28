@@ -6,6 +6,8 @@ import type {
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 
 import { safeRedirect, validateEmail } from "~/lib/routingUtils";
 import { createUser, getUserByEmail } from "~/models/user.server";
@@ -86,17 +88,20 @@ export default function Join() {
 
   return (
     <div className="flex min-h-full flex-col justify-center">
-      <div className="mx-auto w-full max-w-md px-8">
+      <div className="mx-auto w-full max-w-md p-8 bg-zinc-950">
+        <h1 className="text-6xl font-bold text-white mx-auto w-fit pb-10">
+          Negrify
+        </h1>
         <Form method="post" className="space-y-6">
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-50"
             >
               Email address
             </label>
             <div className="mt-1">
-              <input
+              <Input
                 type="email"
                 ref={emailRef}
                 id="email"
@@ -119,12 +124,12 @@ export default function Join() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-50"
             >
               Password
             </label>
-            <div className="mt-1">
-              <input
+            <div className="mt-1 mb-6">
+              <Input
                 id="password"
                 ref={passwordRef}
                 name="password"
@@ -143,14 +148,11 @@ export default function Join() {
           </div>
 
           <input type="hidden" name="redirectTo" value={redirectTo} />
-          <button
-            type="submit"
-            className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-          >
+          <Button type="submit" className="w-full" variant="outline">
             Create Account
-          </button>
-          <div className="flex items-center justify-center">
-            <div className="text-center text-sm text-gray-500">
+          </Button>
+          <div className="flex items-center justify-between">
+            <div className="text-center text-sm text-gray-200">
               Already have an account?{" "}
               <Link
                 className="text-blue-500 underline"
