@@ -3,15 +3,7 @@ import { UserWithRelations } from "~/models/user.server";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
@@ -23,7 +15,7 @@ export const NavBar = ({ user }: NavBarProps) => {
   return (
     <header className="flex items-center justify-between bg-slate-800 p-5 text-white">
       <h1 className="text-3xl font-bold">
-        <Link to=".">Negrify</Link>
+        <Link to="/">Negrify</Link>
       </h1>
       {user ? (
         <DropdownMenu>

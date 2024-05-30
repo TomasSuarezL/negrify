@@ -1,4 +1,9 @@
-import { NavLink, useLoaderData } from "@remix-run/react";
+import {
+  isRouteErrorResponse,
+  NavLink,
+  useLoaderData,
+  useRouteError,
+} from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import { getDJs } from "~/models/dj.server";
 
@@ -35,4 +40,22 @@ export default function DjIndexPage() {
       ))}
     </div>
   );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (error instanceof Error) {
+    return <div>An unexpected error occurred: {error.message}</div>;
+  }
+
+  if (!isRouteErrorResponse(error)) {
+    return <h1>Unknown Error</h1>;
+  }
+
+  if (error.status === 404) {
+    return <div>No DJs found</div>;
+  }
+
+  return <div>An unexpected error occurred: {error.statusText}</div>;
 }
