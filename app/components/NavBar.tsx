@@ -22,7 +22,7 @@ export const NavBar = ({ user }: NavBarProps) => {
           <DropdownMenuTrigger asChild>
             <button className="h-16 w-16 mr-4 rounded-full">
               <img
-                className="w-full rounded-full"
+                className="w-full rounded-full h-full"
                 src={user.dj?.avatar || user.cliente?.avatar}
               />
             </button>

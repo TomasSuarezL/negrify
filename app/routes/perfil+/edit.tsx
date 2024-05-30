@@ -1,18 +1,26 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
-import { useState } from "react";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import invariant from "tiny-invariant";
 import { z, ZodError } from "zod";
 import ClienteFields from "~/components/perfil/ClienteFields";
 import DJFields from "~/components/perfil/DJFields";
 import { Button } from "~/components/ui/button";
 
-import { Label } from "~/components/ui/label";
-import { Switch } from "~/components/ui/switch";
-import { createCliente } from "~/models/cliente.server";
-import { createDJ } from "~/models/dj.server";
+import { isDj } from "~/lib/utils";
+import { createCliente, getClienteByUserId } from "~/models/cliente.server";
+import { createDJ, getDjByUserId } from "~/models/dj.server";
 import { createUbicacion } from "~/models/ubicacion.server";
-import { requireUserId } from "~/session.server";
+import { getUserId, requireUserId } from "~/session.server";
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const userId = await getUserId(request);
+  invariant(userId, "userId must be defined");
+
+  const user =
+    (await getDjByUserId(userId)) ?? (await getClienteByUserId(userId));
+  return user;
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
@@ -110,39 +118,53 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function NewPerfilPage() {
   const actionData = useActionData<typeof action>();
-
-  const [isDJ, setIsDJ] = useState(false);
+  const data = useLoaderData<typeof loader>();
 
   return (
     <div className="flex-1 flex flex-col items-center w-full p-8 overflow-auto">
-      <h3 className="text-5xl pb-8">Crear Nuevo Perfil</h3>
+      <h3 className="text-5xl pb-8">Editar Perfil</h3>
       <Form
-        method="post"
+        method="PATCH"
         className="flex flex-col gap-1 w-5/6 max-w-4xl p-8 border bg-slate-50 mb-8"
       >
-        <div className="flex items-center space-x-2 pb-8">
-          <Switch
-            id="dj-mode"
-            name="dj-mode"
-            checked={isDJ}
-            onCheckedChange={() => setIsDJ(!isDJ)}
-          />
-          <Label htmlFor="dj-mode">Sos DJ?</Label>
-        </div>
         <ClienteFields
-          nombre={{ error: actionData?.errors?.nombre }}
-          apellido={{ error: actionData?.errors?.apellido }}
-          avatar={{ error: actionData?.errors?.avatar }}
-          pais={{ error: actionData?.errors?.pais }}
-          ciudad={{ error: actionData?.errors?.ciudad }}
-          direccion={{ error: actionData?.errors?.direccion }}
+          nombre={{ value: data?.nombre, error: actionData?.errors.nombre }}
+          apellido={{
+            value: data?.apellido,
+            error: actionData?.errors.apellido,
+          }}
+          pais={{
+            value: data?.ubicacion?.pais,
+            error: actionData?.errors.pais,
+          }}
+          ciudad={{
+            value: data?.ubicacion?.ciudad,
+            error: actionData?.errors.ciudad,
+          }}
+          direccion={{
+            value: data?.ubicacion?.direccion,
+            error: actionData?.errors.direccion,
+          }}
+          avatar={{ value: data?.avatar, error: actionData?.errors.avatar }}
         />
-        {isDJ ? (
+        {isDj(data) ? (
           <DJFields
-            descripcion={{ error: actionData?.errors?.descripcion }}
-            rate={{ error: actionData?.errors?.rate }}
-            generos={{ error: actionData?.errors?.generos }}
-            referencias={{ error: actionData?.errors?.referencias }}
+            descripcion={{
+              value: data?.descripcion,
+              error: actionData?.errors?.descripcion,
+            }}
+            rate={{
+              value: data?.rate.toString(),
+              error: actionData?.errors?.rate,
+            }}
+            generos={{
+              value: data.generos.map((g) => g.descripcion),
+              error: actionData?.errors?.generos,
+            }}
+            referencias={{
+              value: data.artistasReferencias.map((a) => a.nombre),
+              error: actionData?.errors?.referencias,
+            }}
           />
         ) : null}
         <div className="text-right">

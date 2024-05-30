@@ -1,17 +1,26 @@
-import type { User, DJ } from "@prisma/client";
+import type { User, DJ, Prisma } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 
 import { prisma } from "~/db.server";
 
+export type DJWithRelations = Prisma.DJGetPayload<{
+  include: {
+    generos: true;
+    artistasReferencias: true;
+    ubicacion: true;
+  };
+}>;
+
 export function createDJ({
   nombre,
+  apellido,
   avatar,
   background,
   descripcion,
   generos,
   artistasReferencias,
   userId,
-  rate
+  rate,
 }: Omit<DJ, "clientesFaveados" | "id" | "rate"> & {
   userId: User["id"];
   generos: string[];
@@ -21,6 +30,7 @@ export function createDJ({
   return prisma.dJ.create({
     data: {
       nombre,
+      apellido,
       avatar,
       background,
       descripcion,
@@ -65,7 +75,7 @@ export function getDjByUserId(userId: User["id"]) {
     include: {
       generos: true,
       artistasReferencias: true,
-      ubicacion: true
+      ubicacion: true,
     },
   });
 }
@@ -76,7 +86,7 @@ export function getDjById(id: DJ["id"]) {
     include: {
       generos: true,
       artistasReferencias: true,
-      ubicacion: true
+      ubicacion: true,
     },
   });
 }

@@ -1,6 +1,7 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
+import { Button } from "~/components/ui/button";
 import { isDj, ubicacionToString } from "~/lib/utils";
 
 import { getClienteByUserId } from "~/models/cliente.server";
@@ -21,12 +22,12 @@ export default function NoteIndexPage() {
 
   if (!data) {
     return (
-      <>
+      <div className="flex flex-col w-full h-full items-center justify-center">
         <h5>Aun no tiene un perfil</h5>
-        <Link to="new" className="text-blue-500 underline">
-          Crear perfil.
+        <Link to="new" className="mt-4">
+          <Button>Crear perfil.</Button>
         </Link>
-      </>
+      </div>
     );
   }
 
@@ -42,12 +43,15 @@ export default function NoteIndexPage() {
             <h4 className="text-slate-50 text-4xl font-black">
               {data?.nombre}
             </h4>
-            {data.ubicacion && (
+            {data?.ubicacion && (
               <p className="text-slate-50 text-xl font-light italic">
                 {ubicacionToString(data.ubicacion)}
               </p>
             )}
           </div>
+          <Link to="./edit">
+            <Button variant={"secondary"}>Editar</Button>
+          </Link>
         </div>
         {isDj(data) && (
           <div className="flex flex-col justify-center">

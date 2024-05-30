@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, Outlet } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
 import { NavBar } from "~/components/NavBar";
 import { useOptionalUser } from "~/lib/routingUtils";
 

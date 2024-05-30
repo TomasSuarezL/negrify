@@ -6,18 +6,25 @@ interface MultiInputProps {
   name: string;
   error?: string;
   placeholder?: string;
+  values?: string[];
 }
 
-export const MultiInput = ({ name, placeholder, error }: MultiInputProps) => {
+export const MultiInput = ({
+  name,
+  placeholder,
+  error,
+  values,
+}: MultiInputProps) => {
   const elementsRef = useRef<HTMLInputElement>(null);
 
-  const [elements, setElements] = useState<string[]>([]);
+  const [elements, setElements] = useState<string[]>(values || []);
 
   const handleAddElement = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (elementsRef?.current?.value) {
       setElements([...elements, elementsRef.current.value]);
+      elementsRef.current.value = "";
     }
   };
 
