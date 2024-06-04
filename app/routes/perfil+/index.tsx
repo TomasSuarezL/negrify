@@ -17,7 +17,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return user;
 };
 
-export default function NoteIndexPage() {
+export default function PerfilIndexPage() {
   const data = useLoaderData<typeof loader>();
 
   if (!data) {

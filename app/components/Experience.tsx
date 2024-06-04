@@ -3,6 +3,8 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
 import { Group, Mesh, Object3DEventMap } from "three";
 
+import { Model } from "./models3d/Emb";
+
 export const Experience = () => {
   const cubeRef = useRef<Mesh | null>(null);
   const groupRef = useRef<Group<Object3DEventMap> | null>(null);
@@ -23,7 +25,8 @@ export const Experience = () => {
       <directionalLight position={[1, 2, 3]} />
       <ambientLight intensity={0.2} />
 
-      <group ref={groupRef} position={[0, -1, 0]}>
+      <Model />
+      {/* <group ref={groupRef} position={[0, -1, 0]}>
         <mesh ref={cubeRef} position-x={2} scale={1.5}>
           <boxGeometry />
           <meshStandardMaterial color="#ff0000" />
@@ -36,7 +39,7 @@ export const Experience = () => {
       <mesh rotation-x={-Math.PI / 2} position-y={-1} scale={10}>
         <planeGeometry />
         <meshStandardMaterial color={"green"} />
-      </mesh>
+      </mesh> */}
     </>
   );
 };

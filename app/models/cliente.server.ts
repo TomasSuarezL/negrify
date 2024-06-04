@@ -34,3 +34,13 @@ export const getClienteByUserId = (userId: User["id"]) => {
     },
   });
 };
+
+export const updateCliente = (
+  id: Cliente["id"],
+  { nombre, apellido, avatar }: Omit<Cliente, "id" | "userId">
+) => {
+  return prisma.cliente.update({
+    where: { id },
+    data: { nombre, apellido, avatar },
+  });
+};

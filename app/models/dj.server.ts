@@ -1,4 +1,4 @@
-import type { User, DJ, Prisma } from "@prisma/client";
+import type { User, DJ, Prisma, Ubicacion } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 
 import { prisma } from "~/db.server";
@@ -83,6 +83,53 @@ export function getDjByUserId(userId: User["id"]) {
 export function getDjById(id: DJ["id"]) {
   return prisma.dJ.findUnique({
     where: { id },
+    include: {
+      generos: true,
+      artistasReferencias: true,
+      ubicacion: true,
+    },
+  });
+}
+
+export function updateDj(
+  id: DJ["id"],
+  data: Partial<
+    Omit<DJ, "rate"> & {
+      rate: number;
+      ubicacion: Partial<Ubicacion>;
+      generos: string[];
+      artistasReferencias: string[];
+    }
+  >,
+) {
+  return prisma.dJ.update({
+    where: { id },
+    data: {
+      ...data,
+      ...(data?.rate && { rate: new Decimal(data.rate) }),
+      generos: {
+        connectOrCreate: data?.generos?.map((g) => ({
+          where: { descripcion: g },
+          create: { descripcion: g },
+        })),
+      },
+      artistasReferencias: {
+        connectOrCreate: data?.artistasReferencias?.map((a) => ({
+          where: { nombre: a },
+          create: { nombre: a },
+        })),
+      },
+      ubicacion: {
+        update: {
+          where: {
+            djId: id,
+          },
+          data: {
+            ...data.ubicacion,
+          },
+        },
+      },
+    },
     include: {
       generos: true,
       artistasReferencias: true,

@@ -8,9 +8,8 @@ import DJFields from "~/components/perfil/DJFields";
 import { Button } from "~/components/ui/button";
 
 import { isDj } from "~/lib/utils";
-import { createCliente, getClienteByUserId } from "~/models/cliente.server";
-import { createDJ, getDjByUserId } from "~/models/dj.server";
-import { createUbicacion } from "~/models/ubicacion.server";
+import { getClienteByUserId, updateCliente } from "~/models/cliente.server";
+import { getDjByUserId, updateDj } from "~/models/dj.server";
 import { getUserId, requireUserId } from "~/session.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -24,6 +23,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
+
+  const user =
+    (await getDjByUserId(userId)) ?? (await getClienteByUserId(userId));
+
+  if (!user) {
+    throw new Response("Not Found", { status: 404 });
+  }
 
   const formData = await request.formData();
   const formPayload = Object.fromEntries(formData);
@@ -53,48 +59,28 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const { nombre, apellido, pais, ciudad, direccion, avatar } =
       perfilSchema.parse(formPayload);
 
-    if (formPayload["dj-mode"]) {
+    if (isDj(user)) {
       const { descripcion, rate } = djSchema.parse(formPayload);
 
-      const dj = await createDJ({
+      await updateDj(user?.id, {
         nombre,
         apellido,
-        userId,
         avatar,
-        descripcion,
         generos,
         rate,
-        background: "",
         artistasReferencias: referencias,
-      });
-
-      // ToDo: Move to atomic transaction;?
-      await createUbicacion({
-        pais,
-        ciudad,
-        direccion,
-        longitud: null,
-        latitud: null,
-        clienteId: null,
-        djId: dj.id,
+        descripcion,
+        ubicacion: {
+          pais,
+          ciudad,
+          direccion,
+        },
       });
     } else {
-      const cliente = await createCliente({
+      updateCliente(user.id, {
         nombre,
-        userId,
         apellido,
         avatar,
-      });
-
-      // ToDo: Move to atomic transaction;?
-      await createUbicacion({
-        pais,
-        ciudad,
-        direccion,
-        longitud: null,
-        latitud: null,
-        clienteId: cliente.id,
-        djId: null,
       });
     }
 
