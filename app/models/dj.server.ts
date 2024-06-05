@@ -108,12 +108,14 @@ export function updateDj(
       ...data,
       ...(data?.rate && { rate: new Decimal(data.rate) }),
       generos: {
+        set: [],
         connectOrCreate: data?.generos?.map((g) => ({
           where: { descripcion: g },
           create: { descripcion: g },
         })),
       },
       artistasReferencias: {
+        set:[],
         connectOrCreate: data?.artistasReferencias?.map((a) => ({
           where: { nombre: a },
           create: { nombre: a },
