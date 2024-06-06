@@ -27,6 +27,8 @@ async function seed() {
   await prisma.dJ.create({
     data: {
       nombre: "Dj. Rachele",
+      apellido: "Dela",
+      rate: 23.4,
       avatar: "https://i.pravatar.cc/150",
       descripcion:
         "Aurum vobis nostrum tubineus ademptio supra cupiditas solum. Utrum colo ascit assentator volo. Crinis nulla trucido tabernus una minus cursim.",
