@@ -43,21 +43,21 @@ export default function PerfilIndexPage() {
             <h4 className="text-slate-50 text-4xl font-black">
               {data?.nombre}
             </h4>
-            {data?.ubicacion && (
+            {data?.ubicacion ? (
               <p className="text-slate-50 text-xl font-light italic">
                 {ubicacionToString(data.ubicacion)}
               </p>
-            )}
+            ) : null}
           </div>
           <Link to="./edit">
             <Button variant={"secondary"}>Editar</Button>
           </Link>
         </div>
-        {isDj(data) && (
+        {isDj(data) ? (
           <div className="flex flex-col justify-center">
             <p className="p-6 text-2xl font-extralight">{data?.descripcion}</p>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

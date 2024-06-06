@@ -1,13 +1,13 @@
 import { OrbitControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
-import { Group, Mesh, Object3DEventMap } from "three";
+import { Mesh } from "three";
 
 import { Model } from "./models3d/Emb";
 
 export const Experience = () => {
   const cubeRef = useRef<Mesh | null>(null);
-  const groupRef = useRef<Group<Object3DEventMap> | null>(null);
+  // const groupRef = useRef<Group<Object3DEventMap> | null>(null);
   const { camera, gl } = useThree();
 
   useFrame((state, delta) => {

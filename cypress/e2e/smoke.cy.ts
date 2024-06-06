@@ -1,23 +1,7 @@
 import { faker } from "@faker-js/faker";
+import { signup } from "support/commons";
 
-const signup = () => {
-  const loginForm = {
-    email: `${faker.internet.userName()}@example.com`,
-    password: faker.internet.password(),
-  };
 
-  cy.then(() => ({ email: loginForm.email })).as("user");
-
-  cy.visitAndCheck("/");
-
-  cy.findByRole("link", { name: /Ingresar/i }).click();
-
-  cy.findByRole("link", { name: /sign up/i }).click();
-
-  cy.findByRole("textbox", { name: /email/i }).type(loginForm.email);
-  cy.findByLabelText(/password/i).type(loginForm.password);
-  cy.findByRole("button", { name: /create account/i }).click();
-};
 
 describe("smoke tests", () => {
   afterEach(() => {
@@ -47,7 +31,7 @@ describe("smoke tests", () => {
     cy.findByRole("textbox", { name: /ciudad/i }).type(clienteForm.ciudad);
     cy.findByRole("textbox", { name: /avatar/i }).type(clienteForm.avatar);
 
-    cy.findByRole("button", { name: /save/i }).click();
+    cy.findByRole("button", { name: /guardar/i }).click();
 
     cy.findByText(clienteForm.nombre);
     cy.findByText(new RegExp(clienteForm.ciudad, "i"));
@@ -95,7 +79,7 @@ describe("smoke tests", () => {
       .siblings("button")
       .click();
 
-    cy.findByRole("button", { name: /save/i }).click();
+    cy.findByRole("button", { name: /guardar/i }).click();
 
     cy.findByText(clienteForm.nombre);
     cy.findByText(new RegExp(clienteForm.ciudad, "i"));

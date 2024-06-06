@@ -29,7 +29,7 @@ export default function NoteDetailsPage() {
       <div className="relative top-0 left-0 flex flex-col px-8 h-full">
         <div className="flex flex-row mt-16">
           <div className="flex w-full max-w-48">
-            <img className="w-full" src={data?.avatar} />
+            <img className="w-full" src={data?.avatar} alt="DJ avatar" />
           </div>
           <div className="flex-1 flex flex-col p-6 space-y-2">
             <h4 className="text-slate-50 text-4xl font-black">
@@ -38,11 +38,11 @@ export default function NoteDetailsPage() {
             <p className="text-slate-50 text-xl font-light italic">
               {data.generos.map((g) => g.descripcion).join(" - ")}
             </p>
-            {data.ubicacion && (
+            {data.ubicacion ? (
               <p className="text-slate-50 text-xl font-light italic">
                 {ubicacionToString(data.ubicacion)}
               </p>
-            )}
+            ) : null}
           </div>
         </div>
         <div className="p-6 flex-1 flex flex-col">

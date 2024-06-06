@@ -146,7 +146,7 @@ export default function NewPerfilPage() {
           />
         ) : null}
         <div className="text-right">
-          <Button type="submit">Save</Button>
+          <Button type="submit">Guardar</Button>
         </div>
       </Form>
     </div>

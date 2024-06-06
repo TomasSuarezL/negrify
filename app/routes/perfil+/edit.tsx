@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { Form, Link, useActionData, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { z, ZodError } from "zod";
 import ClienteFields from "~/components/perfil/ClienteFields";
@@ -153,8 +153,9 @@ export default function NewPerfilPage() {
             }}
           />
         ) : null}
-        <div className="text-right">
-          <Button type="submit">Save</Button>
+        <div className="flex flex-row space-x-4 items-center justify-end">
+          <Link to={"/perfil"}>Cancelar</Link>
+          <Button type="submit">Guardar</Button>
         </div>
       </Form>
     </div>
