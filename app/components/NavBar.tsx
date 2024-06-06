@@ -24,6 +24,7 @@ export const NavBar = ({ user }: NavBarProps) => {
               <img
                 className="w-full rounded-full h-full"
                 src={user.dj?.avatar || user.cliente?.avatar}
+                alt="User avatar"
               />
             </button>
           </DropdownMenuTrigger>
